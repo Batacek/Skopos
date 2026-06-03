@@ -1,0 +1,16 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+.vs/
+
+# Nativní gramatiky a jejich zdroje se sestavují skriptem grammars/build-grammars.*,
+# do repozitáře nepatří. Viz grammars/README.md.
+/grammars/native/
+/grammars/vendor/
+
+# Výstupy balení
+/artifacts/
+/packaging/inno/Output/
