@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Skopos.Core</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Core deliberately knows nothing about Avalonia — it tests without UI and starts faster. -->
+  <ItemGroup>
+    <PackageReference Include="UTF.Unknown" />
+  </ItemGroup>
+
+</Project>
