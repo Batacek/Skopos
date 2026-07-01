@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Skopos.Highlighting</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TreeSitter.DotNet" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Skopos.Core\Skopos.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    The queries live in grammars/queries next to the grammars but are embedded into the
+    assembly — reading them from disk when opening a file would slow it down.
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\grammars\queries\json.scm" LogicalName="Skopos.Highlighting.Queries.json.scm" />
+    <EmbeddedResource Include="..\..\grammars\queries\markdown.scm" LogicalName="Skopos.Highlighting.Queries.markdown.scm" />
+    <EmbeddedResource Include="..\..\grammars\queries\markdown-inline.scm" LogicalName="Skopos.Highlighting.Queries.markdown-inline.scm" />
+  </ItemGroup>
+
+</Project>
