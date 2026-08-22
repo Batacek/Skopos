@@ -1,0 +1,88 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Skopos</RootNamespace>
+    <AssemblyName>skopos</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- Reflection is not affordable under AOT. -->
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+    <TrimMode>partial</TrimMode>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <!-- Only kicks in on `dotnet publish -p:PublishAot=true`; an ordinary build stays fast. -->
+  <PropertyGroup Condition="'$(PublishAot)' == 'true'">
+    <EventSourceSupport>false</EventSourceSupport>
+    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Condition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Skopos.Core\Skopos.Core.csproj" />
+    <ProjectReference Include="..\Skopos.Highlighting\Skopos.Highlighting.csproj" />
+  </ItemGroup>
+
+  <!--
+    Native grammars that the TreeSitter.DotNet package does not ship (markdown).
+    They are built by grammars/build-grammars.* — without them markdown renders as plain
+    text, which is why this is a warning and not an error.
+  -->
+  <PropertyGroup>
+    <SkoposGrammarRid Condition="'$(RuntimeIdentifier)' != ''">$(RuntimeIdentifier)</SkoposGrammarRid>
+    <SkoposGrammarRid Condition="'$(SkoposGrammarRid)' == ''">$(NETCoreSdkPortableRuntimeIdentifier)</SkoposGrammarRid>
+    <SkoposGrammarDir>$(MSBuildThisFileDirectory)..\..\grammars\native\$(SkoposGrammarRid)\</SkoposGrammarDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(SkoposGrammarDir)*.dll;$(SkoposGrammarDir)*.so;$(SkoposGrammarDir)*.dylib"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest"
+          Link="%(Filename)%(Extension)"
+          Visible="false" />
+  </ItemGroup>
+
+  <Target Name="SkoposWarnOnMissingGrammars" BeforeTargets="Build">
+    <Warning Condition="!Exists('$(SkoposGrammarDir)')"
+             Code="SKOPOS001"
+             Text="Native grammars for $(SkoposGrammarRid) are missing. Markdown will render without highlighting. Run grammars/build-grammars.ps1 (Windows) or grammars/build-grammars.sh." />
+  </Target>
+
+  <!--
+    The package should stay at 25–40 MB per platform, and it grows with every language.
+    TreeSitter.DotNet, however, ships over thirty grammars for each RID — of which we need
+    exactly one (JSON) plus the runtime. The rest would triple the package size and, on
+    macOS, the number of libraries that have to be signed.
+  -->
+  <Target Name="SkoposTrimPublishOutput" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <_SkoposGrammar Include="@(ResolvedFileToPublish)"
+                      Condition="$([System.String]::Copy('%(Filename)').StartsWith('tree-sitter')) Or $([System.String]::Copy('%(Filename)').StartsWith('libtree-sitter'))" />
+
+      <!-- Keeps the runtime, JSON and markdown (we carry our own from grammars/native). -->
+      <_SkoposGrammarDrop Include="@(_SkoposGrammar)"
+                          Condition="!$([System.String]::Copy('%(Filename)').Contains('markdown'))
+                                 And '%(Filename)' != 'tree-sitter' And '%(Filename)' != 'libtree-sitter'
+                                 And '%(Filename)' != 'tree-sitter-json' And '%(Filename)' != 'libtree-sitter-json'" />
+
+      <ResolvedFileToPublish Remove="@(_SkoposGrammarDrop)" />
+
+      <!-- Symbols do not belong in the distribution; they stay in the build folder for debugging. -->
+      <_SkoposSymbols Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.pdb'" />
+      <ResolvedFileToPublish Remove="@(_SkoposSymbols)" Condition="'$(Configuration)' == 'Release'" />
+    </ItemGroup>
+
+    <Message Importance="normal" Text="Skopos: dropped @(_SkoposGrammarDrop->Count()) unused grammars." />
+  </Target>
+
+
+</Project>
