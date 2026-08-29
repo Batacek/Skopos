@@ -1,0 +1,74 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- No menu bar, no toolbar, no sidebar. Tabs, editor, status bar. -->
+
+    <Style Selector="TabControl.documents">
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="TabItem.document">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <!-- A deleted file is marked by italics in the tab header. -->
+    <Style Selector="TabItem.document.missing TextBlock.title">
+        <Setter Property="FontStyle" Value="Italic" />
+        <Setter Property="Opacity" Value="0.65" />
+    </Style>
+
+    <Style Selector="Button.tabClose">
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Opacity" Value="0.55" />
+    </Style>
+    <Style Selector="Button.tabClose:pointerover">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="Border.statusBar">
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+        <Setter Property="Padding" Value="10,3" />
+    </Style>
+
+    <Style Selector="Border.statusBar TextBlock">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <!-- Encoding and word wrap are clickable in the status bar. -->
+    <Style Selector="Button.statusItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="6,1" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+    <Style Selector="Button.statusItem:pointerover">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="Border.notice">
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundListLowBrush}" />
+    </Style>
+
+    <Style Selector="Border.notice TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+</Styles>
