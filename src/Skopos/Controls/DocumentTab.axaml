@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             x:Class="Skopos.Controls.DocumentTab">
+
+    <DockPanel>
+
+        <!-- Unobtrusive bar: large file, missing grammar, deleted file. -->
+        <Border Name="NoticeBar" DockPanel.Dock="Top" Classes="notice" IsVisible="False">
+            <DockPanel>
+                <Button Name="NoticeAction" DockPanel.Dock="Right" Padding="8,2" FontSize="12" />
+                <TextBlock Name="NoticeText" TextWrapping="Wrap" />
+            </DockPanel>
+        </Border>
+
+        <Panel>
+            <ae:TextEditor Name="Editor"
+                           IsReadOnly="True"
+                           ShowLineNumbers="True"
+                           HorizontalScrollBarVisibility="Auto"
+                           VerticalScrollBarVisibility="Auto" />
+
+            <!-- A binary file is not shown as text until the user asks for it. -->
+            <Border Name="BinaryOverlay" IsVisible="False"
+                    Background="{DynamicResource ThemeBackgroundBrush}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                    <TextBlock Name="BinaryText" HorizontalAlignment="Center" FontSize="13" />
+                    <Button Name="ShowAnywayButton" Content="Show anyway" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <Border Name="ErrorOverlay" IsVisible="False"
+                    Background="{DynamicResource ThemeBackgroundBrush}">
+                <TextBlock Name="ErrorText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="13" TextWrapping="Wrap" MaxWidth="480" TextAlignment="Center" />
+            </Border>
+        </Panel>
+
+    </DockPanel>
+</UserControl>
