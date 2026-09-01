@@ -1,0 +1,58 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+        x:Class="Skopos.MainWindow"
+        Title="Skopos"
+        Width="1000" Height="700"
+        MinWidth="480" MinHeight="320">
+
+    <!-- No menu bar, no toolbar, no sidebar. Everything through keys and the gear. -->
+    <DockPanel>
+
+        <Border Name="StatusBar" DockPanel.Dock="Bottom" Classes="statusBar">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Name="StatusLanguage" />
+                    <TextBlock Text="·" Margin="6,0" />
+
+                    <!-- Clicking the encoding switches it and reloads the file. -->
+                    <Button Name="EncodingButton" Classes="statusItem" ToolTip.Tip="Change encoding" />
+
+                    <TextBlock Text="·" Margin="6,0" />
+                    <TextBlock Name="StatusLineEnding" />
+                    <TextBlock Text="·" Margin="6,0" />
+                    <TextBlock Name="StatusLineCount" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Alt+Z, or by clicking here. -->
+                    <Button Name="WordWrapButton" Classes="statusItem" ToolTip.Tip="Word wrap (Alt+Z)" />
+                    <TextBlock Text="·" Margin="6,0" />
+                    <TextBlock Name="StatusCaret" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid>
+            <TabControl Name="Tabs" Classes="documents" />
+
+            <Button Name="SettingsButton"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="0,2,6,0" Padding="7,3"
+                    Background="Transparent" BorderThickness="0"
+                    FontSize="14" Content="&#x2699;"
+                    ToolTip.Tip="Settings (Ctrl+,)" />
+
+            <StackPanel Name="EmptyState"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Spacing="6" IsVisible="False">
+                <TextBlock Text="Skopos" FontSize="26" HorizontalAlignment="Center" Opacity="0.5" />
+                <TextBlock Text="Press Ctrl+O to open a file, or drop one here."
+                           FontSize="12" HorizontalAlignment="Center" Opacity="0.5" />
+            </StackPanel>
+        </Grid>
+
+    </DockPanel>
+</Window>
