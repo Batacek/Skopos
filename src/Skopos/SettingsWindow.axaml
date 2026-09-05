@@ -1,0 +1,75 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Skopos.SettingsWindow"
+        Title="Settings — Skopos"
+        Width="440" Height="560"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <DockPanel Margin="16">
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Spacing="8" Margin="0,14,0,0">
+            <Button Name="CancelButton" Content="Cancel" />
+            <Button Name="SaveButton" Content="Save" IsDefault="True" />
+        </StackPanel>
+
+        <TextBlock Name="LocationText" DockPanel.Dock="Bottom"
+                   FontSize="11" Opacity="0.6" TextWrapping="Wrap" Margin="0,12,0,0" />
+
+        <ScrollViewer>
+            <StackPanel Spacing="14">
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Appearance" FontWeight="SemiBold" />
+                    <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Theme" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" Name="ThemeBox" HorizontalAlignment="Stretch" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Font" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" Name="FontBox" HorizontalAlignment="Stretch" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Size" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Row="2" Grid.Column="1" Name="FontSizeBox"
+                                       Minimum="6" Maximum="72" Increment="1" FormatString="0.#" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Editor" FontWeight="SemiBold" />
+                    <CheckBox Name="LineNumbersBox" Content="Show line numbers" />
+                    <CheckBox Name="WhitespaceBox" Content="Show whitespace" />
+                    <Grid ColumnDefinitions="130,*" RowDefinitions="Auto,Auto" RowSpacing="6">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Word wrap" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" Name="WordWrapBox" HorizontalAlignment="Stretch" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Tab width" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Name="TabWidthBox"
+                                       Minimum="1" Maximum="16" Increment="1" FormatString="0" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Highlighting" FontWeight="SemiBold" />
+                    <CheckBox Name="HighlightingBox" Content="Highlight syntax" />
+                    <Grid ColumnDefinitions="200,*" RowDefinitions="Auto,Auto" RowSpacing="6">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Disable above (MB)" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Row="0" Grid.Column="1" Name="MaxSizeBox"
+                                       Minimum="0.1" Maximum="1024" Increment="1" FormatString="0.#" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Background above (MB)" VerticalAlignment="Center" />
+                        <NumericUpDown Grid.Row="1" Grid.Column="1" Name="AsyncSizeBox"
+                                       Minimum="0.1" Maximum="1024" Increment="0.5" FormatString="0.#" />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Window" FontWeight="SemiBold" />
+                    <CheckBox Name="RememberSizeBox" Content="Remember window size" />
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
