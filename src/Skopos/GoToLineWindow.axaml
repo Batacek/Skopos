@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Skopos.GoToLineWindow"
+        Title="Go to line"
+        Width="280" SizeToContent="Height"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
+
+    <StackPanel Margin="16" Spacing="10">
+        <TextBlock Name="Prompt" FontSize="12" />
+        <TextBox Name="LineInput" PlaceholderText="line number" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Name="CancelButton" Content="Cancel" />
+            <Button Name="OkButton" Content="Go" IsDefault="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>
