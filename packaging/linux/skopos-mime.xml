@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  MIME types Skopos can open.
+
+  Install:
+    xdg-mime install --mode user packaging/linux/skopos-mime.xml
+    desktop-file-install --dir="$HOME/.local/share/applications" packaging/linux/skopos.desktop
+    update-desktop-database "$HOME/.local/share/applications"
+
+  This only registers Skopos as one of the options. It deliberately does not make itself
+  the default application — that is the user's call:
+    xdg-mime default skopos.desktop application/json
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <!-- application/json and text/markdown are already defined by shared-mime-info; we only
+       add the extensions that may be missing there. -->
+  <mime-type type="application/json">
+    <comment>JSON document</comment>
+    <glob pattern="*.jsonc"/>
+    <glob pattern="*.webmanifest"/>
+  </mime-type>
+
+  <mime-type type="text/markdown">
+    <comment>Markdown document</comment>
+    <glob pattern="*.mdown"/>
+    <glob pattern="*.mkd"/>
+  </mime-type>
+
+</mime-info>
