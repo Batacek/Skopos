@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Skopos
+GenericName=Code Viewer
+Comment=Fast code viewer with syntax highlighting
+Exec=skopos %F
+Icon=skopos
+Terminal=false
+Categories=Utility;TextEditor;Development;
+MimeType=application/json;text/markdown;text/plain;
+Keywords=viewer;code;json;markdown;
+StartupNotify=true
+StartupWMClass=skopos
