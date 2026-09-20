@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  macOS bundle. This file is prepared but unverified.
+
+  ⚠️ Gatekeeper: *every* native library has to be notarised, not just the main
+  binary. For Skopos that means tree-sitter.dylib and all the grammars
+  (libtree-sitter-json, libtree-sitter-markdown, libtree-sitter-markdown-inline),
+  plus libSkiaSharp and libHarfBuzzSharp. Underestimating this step means a build
+  that will not start at all on someone else's Mac.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Skopos</string>
+    <key>CFBundleDisplayName</key>
+    <string>Skopos</string>
+    <key>CFBundleIdentifier</key>
+    <string>net.skopos.Skopos</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleExecutable</key>
+    <string>skopos</string>
+    <key>CFBundleIconFile</key>
+    <string>skopos.icns</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+
+    <!-- The app supports both light and dark themes and reacts to changes at runtime. -->
+    <key>NSRequiresAquaSystemAppearance</key>
+    <false/>
+
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>JSON document</string>
+            <!-- Viewer, not Editor — Skopos is read-only. -->
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>public.json</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Markdown document</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>net.daringfireball.markdown</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Plain text document</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>public.plain-text</string>
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>
