@@ -1,0 +1,103 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+
+jobs:
+  build:
+    name: ${{ matrix.rid }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # No macOS build yet — it needs every native library notarised separately.
+          - { os: windows-latest, rid: win-x64 }
+          - { os: ubuntu-latest,  rid: linux-x64 }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Gramatiky (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./grammars/build-grammars.ps1 -Rid ${{ matrix.rid }}
+
+      - name: Gramatiky (Linux)
+        if: runner.os == 'Linux'
+        run: ./grammars/build-grammars.sh ${{ matrix.rid }}
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./packaging/build-release.ps1 -Rid ${{ matrix.rid }} -SkipGrammars
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          dotnet publish src/Skopos/Skopos.csproj -c Release -r ${{ matrix.rid }} \
+            -p:PublishAot=true -o artifacts/stage/${{ matrix.rid }}
+          cd artifacts/stage/${{ matrix.rid }}
+          rm -f *.pdb *.dbg
+          # Portable mode — settings stay next to the application.
+          touch portable.txt
+          cp "$GITHUB_WORKSPACE/README.md" "$GITHUB_WORKSPACE/CHANGELOG.md" \
+             "$GITHUB_WORKSPACE/THIRD-PARTY-LICENSES.md" .
+          cp "$GITHUB_WORKSPACE/packaging/linux/skopos.desktop" \
+             "$GITHUB_WORKSPACE/packaging/linux/skopos-mime.xml" .
+          chmod +x skopos
+          tar -czf "$GITHUB_WORKSPACE/artifacts/skopos-${{ github.ref_name }}-${{ matrix.rid }}.tar.gz" .
+
+      # ⚠️ Signing BELONGS HERE. Without it SmartScreen on Windows shows
+      # "Windows protected your PC" and most people close the installer.
+      # SignPath.io is free for open source, otherwise an OV certificate.
+      # Until this is settled the binaries are unsigned — a deliberate debt, not an oversight.
+      - name: Signing
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Write-Host '::warning title=Signing::Binaries are unsigned.'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skopos-${{ matrix.rid }}
+          path: |
+            artifacts/*.zip
+            artifacts/*.tar.gz
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          draft: true
+          generate_release_notes: true
+          body: |
+            Release notes are in [CHANGELOG.md](CHANGELOG.md).
+
+            > ⚠️ The binaries are not signed yet. Windows may show a SmartScreen warning
+            > on launch.
