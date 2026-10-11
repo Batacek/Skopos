@@ -14,7 +14,7 @@ versioning is [SemVer](https://semver.org/).
 
 - `UTF.Unknown` is now used under its GPL-2.0-or-later option instead of MPL-1.1, which is
   incompatible with the GPL
-- The first public release will ship unsigned; signing is deferred (§11.2)
+- The first public release will ship unsigned; signing is deferred
 
 ## v1.0.0 — 2026-06-09
 
