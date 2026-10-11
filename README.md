@@ -32,11 +32,7 @@ More languages (Python, C, C++, YAML, TOML, XML) are planned for v1.2.
 
 ## Download
 
-No binaries have been released yet — the first public release is planned for v1.1. Until
-then, build it from source — see below.
-
-Releases will offer a **portable ZIP** (recommended — unpack and run, nothing is installed)
-and a Windows installer.
+Download the latest version from the [Releases](https://github.com/Batacek/Skopos/releases) page. The portable ZIP is recommended — unpack and run, nothing is installed.
 
 > ⚠️ **The binaries are not code-signed.** On first run Windows SmartScreen may show
 > "Windows protected your PC". Click **More info → Run anyway**. This is expected for
