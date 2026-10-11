@@ -28,19 +28,19 @@ jobs:
 
       # The markdown grammars are not in the TreeSitter.DotNet package, they are built
       # from source. Without this step the markdown highlighting tests would not pass.
-      - name: Gramatiky (Windows)
+      - name: Grammars (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: ./grammars/build-grammars.ps1
 
-      - name: Gramatiky (Unix)
+      - name: Grammars (Unix)
         if: runner.os != 'Windows'
         run: ./grammars/build-grammars.sh
 
       - name: Build
         run: dotnet build -c Release
 
-      - name: Testy
+      - name: Test
         run: dotnet test -c Release --no-build --verbosity normal
 
   # Startup time only stays low if it keeps being measured. This job produces an AOT build,
@@ -56,7 +56,7 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Gramatiky
+      - name: Grammars
         shell: pwsh
         run: ./grammars/build-grammars.ps1
 
@@ -71,7 +71,7 @@ jobs:
         shell: pwsh
         run: |
           $exe = "artifacts/stage/win-x64/skopos.exe"
-          $sample = "$env:TEMP/mereni.json"
+          $sample = "$env:TEMP/startup-sample.json"
           '{ "a": 1, "b": [1, 2, 3], "c": { "d": true } }' | Set-Content $sample
 
           $times = @()
@@ -82,8 +82,8 @@ jobs:
             Start-Sleep -Seconds 3
             Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
 
-            $line = Get-Content $log -ErrorAction SilentlyContinue | Where-Object { $_ -like '*vykreslen*' }
-            if ($line -match 'celkem\s+([\d,\.]+)') {
+            $line = Get-Content $log -ErrorAction SilentlyContinue | Where-Object { $_ -like '*first paint*' }
+            if ($line -match 'total\s+([\d,\.]+)') {
               if ($i -ge 2) { $times += [double](($matches[1]) -replace ',', '.') }
             }
           }
@@ -91,13 +91,13 @@ jobs:
           if ($times.Count -eq 0) { throw 'Startup could not be measured.' }
 
           $avg = ($times | Measure-Object -Average).Average
-          Write-Host ("Start (Main -> prvni vykresleni): {0:N1} ms" -f $avg)
-          Write-Host ("::notice title=Start::{0:N1} ms" -f $avg)
+          Write-Host ("Startup (Main -> first paint): {0:N1} ms" -f $avg)
+          Write-Host ("::notice title=Startup::{0:N1} ms" -f $avg)
 
           # The target is ~155 ms; a GitHub runner is slower and noisier than a developer
           # machine, so the threshold is looser here. The point is catching a regression,
           # not pinning an exact number.
-          if ($avg -gt 400) { throw ("Start {0:N1} ms je mimo rozpoctem danou hranici." -f $avg) }
+          if ($avg -gt 400) { throw ("Startup {0:N1} ms is over the budgeted threshold." -f $avg) }
 
       - uses: actions/upload-artifact@v4
         with:

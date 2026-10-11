@@ -9,8 +9,8 @@
     4. Prints the package size. It needs watching, because it grows with every
        language added; the target is 25-40 MB per platform.
 
-    This script does not sign anything — that is a separate step before a release,
-    and without it SmartScreen blocks the install. See README.
+    This script does not sign anything. Releases are unsigned for now, so Windows
+    SmartScreen shows a warning on first run. See the Distribution section of ROADMAP.md.
 
 .PARAMETER Rid
     Target RID, defaults to win-x64.
@@ -64,7 +64,7 @@ Get-ChildItem $PublishDir -Recurse -File |
         Copy-Item $_.FullName $target
     }
 
-foreach ($doc in 'README.md', 'CHANGELOG.md', 'THIRD-PARTY-LICENSES.md') {
+foreach ($doc in 'README.md', 'CHANGELOG.md', 'THIRD-PARTY-LICENSES.md', 'LICENSE') {
     $source = Join-Path $RepoRoot $doc
     if (Test-Path $source) { Copy-Item $source $StageDir }
 }

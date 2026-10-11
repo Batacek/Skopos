@@ -30,12 +30,12 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Gramatiky (Windows)
+      - name: Grammars (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: ./grammars/build-grammars.ps1 -Rid ${{ matrix.rid }}
 
-      - name: Gramatiky (Linux)
+      - name: Grammars (Linux)
         if: runner.os == 'Linux'
         run: ./grammars/build-grammars.sh ${{ matrix.rid }}
 
@@ -54,16 +54,15 @@ jobs:
           # Portable mode — settings stay next to the application.
           touch portable.txt
           cp "$GITHUB_WORKSPACE/README.md" "$GITHUB_WORKSPACE/CHANGELOG.md" \
-             "$GITHUB_WORKSPACE/THIRD-PARTY-LICENSES.md" .
+             "$GITHUB_WORKSPACE/THIRD-PARTY-LICENSES.md" "$GITHUB_WORKSPACE/LICENSE" .
           cp "$GITHUB_WORKSPACE/packaging/linux/skopos.desktop" \
              "$GITHUB_WORKSPACE/packaging/linux/skopos-mime.xml" .
           chmod +x skopos
           tar -czf "$GITHUB_WORKSPACE/artifacts/skopos-${{ github.ref_name }}-${{ matrix.rid }}.tar.gz" .
 
-      # ⚠️ Signing BELONGS HERE. Without it SmartScreen on Windows shows
-      # "Windows protected your PC" and most people close the installer.
-      # SignPath.io is free for open source, otherwise an OV certificate.
-      # Until this is settled the binaries are unsigned — a deliberate debt, not an oversight.
+      # Signing belongs here. Releases are deliberately unsigned for now; signing will be
+      # sorted out separately (see the Distribution section of ROADMAP.md). Until then this
+      # step only flags the unsigned binaries in the run summary.
       - name: Signing
         if: runner.os == 'Windows'
         shell: pwsh
@@ -95,9 +94,10 @@ jobs:
         with:
           files: dist/*
           draft: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
           generate_release_notes: true
           body: |
-            Release notes are in [CHANGELOG.md](CHANGELOG.md).
+            Release notes are in [CHANGELOG.md](https://github.com/Batacek/Skopos/blob/master/CHANGELOG.md).
 
             > ⚠️ The binaries are not signed yet. Windows may show a SmartScreen warning
             > on launch.

@@ -6,11 +6,21 @@ riderModule.iml
 .idea/
 .vs/
 
-# Nativní gramatiky a jejich zdroje se sestavují skriptem grammars/build-grammars.*,
-# do repozitáře nepatří. Viz grammars/README.md.
+# The native grammars and their sources are built by grammars/build-grammars.*
+# and do not belong in the repository. See grammars/README.md.
 /grammars/native/
 /grammars/vendor/
 
-# Výstupy balení
+# Packaging output
 /artifacts/
 /packaging/inno/Output/
+
+# Private design documentation, never pushed
+Docs/
+
+# Claude Code local state
+.claude/
+
+# Rider JVM crash logs
+hs_err_pid*.log
+replay_pid*.log
